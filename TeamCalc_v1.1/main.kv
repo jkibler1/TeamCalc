@@ -1,0 +1,190 @@
+# Josh Kibler 3/3/21
+#:import Factory kivy.factory.Factory
+
+<mySpinner@SpinnerOption>:
+    size_hint_y: None
+    height: dp(25)
+<myFilter@SpinnerOption>:
+    size_hint_y: None
+    height: dp(20)
+    font_size: sp(10)
+    #on_press: self.filter_press() would prefer something like this to on_text, to show Filtering status
+
+<MyLayout>:
+    type1_input: type1_input
+    type2_input: type2_input
+    #old_filter_input: old_filter_input
+    new_filter_input: new_filter_input
+    submit: submit
+    status: status
+    rsort: rsort
+    #psort: psort
+    wsort: wsort
+    usort: usort
+    orientation: "vertical"
+
+    GridLayout:
+        canvas.before:
+            Color:
+                rgba: (255/255.0,230/245.0,200/240.0,.9)
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        cols: 2
+        size_hint: 1, None
+        size_hint_y: None
+        height: dp(25)
+
+        Label:
+            text: " TeamCalc - v1.1"
+            size_hint_x: None
+            width: dp(150)
+            halign: "left"
+            text_size: self.size
+            color: (80/255.0,0/255.0,0/255.0,1)
+            bold: True
+        Label:
+            id: status
+            text: '< Initialized. Select and submit types! >'
+            font_size: sp(10)
+            halign: "right"
+            text_size: self.size
+            #shorten: True
+            #split_str: ' '
+            #max_lines: 2
+            padding_x: dp(2)
+            color: (0,0,0,1)
+
+    GridLayout:
+        cols: 4
+        size_hint: 1, None
+        size_hint_y: None
+        height: dp(40)
+
+        Label:
+            text: "1st Pokemon types:"
+            size_hint_x: None
+            width: dp(200)
+        Spinner:
+            id: type1_input
+            text: "none"
+            values: ["none","normal","fire","water","electric","grass","ice","fighting","poison","ground","flying","psychic","bug","rock","ghost","dragon","dark","steel","fairy"]
+            on_text: root.spinner1_clicked(type1_input.text)
+            background_normal: ''
+            background_color: root.color
+            outline_color: (0,0,0,1)
+            outline_width: 1
+            option_cls: Factory.get("mySpinner")
+        Spinner:
+            id: type2_input
+            text: "none"
+            values: ["none","normal","fire","water","electric","grass","ice","fighting","poison","ground","flying","psychic","bug","rock","ghost","dragon","dark","steel","fairy"]
+            on_text: root.spinner2_clicked(type2_input.text)
+            background_normal: ''
+            background_color: root.color
+            outline_color: (0,0,0,1)
+            outline_width: 1
+            option_cls: Factory.get("mySpinner")
+        Button:
+            id: submit
+            text: "Submit"
+            on_press: root.press()
+            on_release: root.release()
+            always_release: True
+
+    GridLayout:
+        canvas.before:
+            Color:
+                rgba: (1,1,1,.9)
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        cols: 8
+        size_hint: 1, None
+        size_hint_y: None
+        height: dp(25)
+        #padding: (0,0,5,0)
+
+        #GridLayout:
+            #cols: 2
+        Label:
+            text: "Rating"
+            color: (0,0,0,1)
+            font_size: sp(10)
+            size_hint_x: None
+            width: dp(35)
+        Button:
+            id: rsort
+            text: "-"
+            on_press: root.sort_press()
+            on_release: root.sort_release('r', rsort.text)
+            always_release: True
+            background_normal: ''
+            color: (0,0,0,1)
+            size_hint_x: None
+            width: dp(20)
+        Label:
+            text: "Ally Pokemon"
+            font_size: sp(10)
+            color: (0,0,0,1)
+        #Button:
+            #id: psort
+            #text: "-"
+            #on_press: root.sort_press()
+            #on_release: root.sort_release('p', psort.text)
+            #always_release: True
+            #background_normal: ''
+            #color: (0,0,0,1)
+            #size_hint_x: None
+            #width: dp(20)
+        Spinner:
+            id: new_filter_input
+            option_cls: Factory.get("myFilter")
+            text: "any"
+            values: ["any","normal","fire","water","electric","grass","ice","fighting","poison","ground","flying","psychic","bug","rock","ghost","dragon","dark","steel","fairy"]
+            on_text: root.filter_clicked()
+            background_normal: ''
+            color: (0,0,0,1)
+            size_hint_x: None
+            width: dp(40)
+            font_size: sp(10)
+
+        Label:
+            text: "Weaknesses"
+            font_size: sp(10)
+            color: (0,0,0,1)
+        Button:
+            id: wsort
+            text: "-"
+            on_press: root.sort_press()
+            on_release: root.sort_release('w', wsort.text)
+            always_release: True
+            background_normal: ''
+            color: (0,0,0,1)
+            size_hint_x: None
+            width: dp(20)
+        Label:
+            text: "Unresists"
+            font_size: sp(10)
+            color: (0,0,0,1)
+        Button:
+            id: usort
+            text: "-"
+            on_press: root.sort_press()
+            on_release: root.sort_release('u', usort.text)
+            always_release: True
+            background_normal: ''
+            color: (0,0,0,1)
+            size_hint_x: None
+            width: dp(20)
+
+    BoxLayout:
+        RecycleView:
+            viewclass: 'Label'
+            data: root.teams_data
+            RecycleGridLayout:
+                cols: 4
+                default_size: None, dp(25)
+                default_size_hint: 1, None
+                size_hint_y: None
+                height: self.minimum_height
